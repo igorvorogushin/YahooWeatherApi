@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Weather Api Yahoo</string>
+    <string name="menu_update">Update</string>
+    <string name="tab_today">Today</string>
+    <string name="tab_week">Week</string>
+    <string name="error">Error</string>
+
+
+    <string name="today_city">City:</string>
+    <string name="today_country">Country:</string>
+    <string name="today_region">Region:</string>
+    <string name="today_update">Update:</string>
+    <string name="today_astronomy">Astronomy:</string>
+    <string name="today_astronomy_sunrise">Sunrise:</string>
+    <string name="today_astronomy_sunset">Sunset:</string>
+    <string name="today_morning">Morning:</string>
+    <string name="today_night">Night:</string>
+
+
+
+</resources>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.vorogushinigor.weatherapiyahoo.view.activity.MainActivity">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.vorogushinigor.weatherapiyahoo.model.detail_weather.Weather" />
+    </data>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="date"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="@dimen/secondary_text"
+                    app:text="@{model.query.results.channel.item.condition.date}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="update"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="@dimen/secondary_text"
+                    app:text="@{@string/today_update+' '+model.timeUpdate}" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:gravity="center"
+                        android:text="null"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="60sp"
+                        app:temperature="@{model.query.results.channel.item.condition.temp}" />
+
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/na3200"
+                        app:imageCode="@{model.query.results.channel.item.condition.code}" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="morning"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="@dimen/secondary_text"
+                            app:temperature="@{@string/today_morning+' '+model.query.results.channel.item.forecast[0].high}" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="night"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="@dimen/secondary_text"
+                            app:temperature="@{@string/today_night+' '+model.query.results.channel.item.forecast[0].low}" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="city"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="@dimen/secondary_text"
+                        app:text="@{@string/today_city+' '+model.query.results.channel.location.city}" />
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="country"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="@dimen/secondary_text"
+                        app:text="@{@string/today_country+' '+model.query.results.channel.location.country}" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="region"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="@dimen/secondary_text"
+                        app:text="@{@string/today_region+' '+model.query.results.channel.location.region}" />
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:text="sunrise"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="@dimen/secondary_text"
+                        app:text="@{@string/today_astronomy_sunrise+' '+model.query.results.channel.astronomy.sunrise}" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="sunset"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="@dimen/secondary_text"
+                        app:text="@{@string/today_astronomy_sunset+' '+model.query.results.channel.astronomy.sunset}" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+</layout>
