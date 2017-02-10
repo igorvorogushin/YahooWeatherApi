@@ -13,9 +13,12 @@ import android.view.ViewGroup;
 
 import com.vorogushinigor.weatherapiyahoo.R;
 import com.vorogushinigor.weatherapiyahoo.databinding.ActivityMainBinding;
+import com.vorogushinigor.weatherapiyahoo.model.detail_weather.Forecast;
 import com.vorogushinigor.weatherapiyahoo.model.detail_weather.Weather;
 import com.vorogushinigor.weatherapiyahoo.view.fragment.MainFragment;
 import com.vorogushinigor.weatherapiyahoo.viewmodel.ViewModelMain;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ViewModelMain.CallBack, MainFragment.CallBack {
 
@@ -30,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements ViewModelMain.Cal
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setSupportActionBar(binding.toolbar);
-
 
         viewModelMain = ViewModelMain.getInstance(getApplicationContext());
         viewModelMain.setCallBack(this);
@@ -103,6 +105,11 @@ public class MainActivity extends AppCompatActivity implements ViewModelMain.Cal
     public void updateWeather(Weather weather) {
         if (mainFragment != null) mainFragment.updateWeather(weather);
 
+    }
+
+    @Override
+    public void updateWeatherPast(List<Forecast> forecastList) {
+        if (mainFragment != null) mainFragment.updateWeatherPast(forecastList);
     }
 
     @Override

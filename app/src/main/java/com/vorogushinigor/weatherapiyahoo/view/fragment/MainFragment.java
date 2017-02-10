@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 
 import com.vorogushinigor.weatherapiyahoo.R;
 import com.vorogushinigor.weatherapiyahoo.databinding.FragmentMainBinding;
+import com.vorogushinigor.weatherapiyahoo.model.detail_weather.Forecast;
 import com.vorogushinigor.weatherapiyahoo.model.detail_weather.Weather;
 import com.vorogushinigor.weatherapiyahoo.view.adapter.TabsAdapter;
-import com.vorogushinigor.weatherapiyahoo.viewmodel.ViewModelMain;
+
+import java.util.List;
 
 
 public class MainFragment extends Fragment {
@@ -31,6 +33,7 @@ public class MainFragment extends Fragment {
 
     private TodayFragment todayFragment;
     private WeekFragment weekFragment;
+    private PastFragment pastFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,10 +48,15 @@ public class MainFragment extends Fragment {
             weekFragment = new WeekFragment();
         weekFragment.setRetainInstance(true);
 
+        if (pastFragment == null)
+            pastFragment = new PastFragment();
+        pastFragment.setRetainInstance(true);
+
+
         TabsAdapter tabsAdapter = new TabsAdapter(getChildFragmentManager());
         tabsAdapter.addFrag(todayFragment, getString(R.string.tab_today));
         tabsAdapter.addFrag(weekFragment, getString(R.string.tab_week));
-
+        tabsAdapter.addFrag(pastFragment, getString(R.string.tab_past));
         binding.viewpager.setAdapter(tabsAdapter);
 
         if (callBack != null) callBack.initPageView(binding.viewpager);
@@ -62,6 +70,10 @@ public class MainFragment extends Fragment {
             weekFragment.showWeek(weather.getQuery().getResults().getChannel().getItem().getForecast());
         if (todayFragment != null)
             todayFragment.setModel(weather);
+    }
+
+    public void updateWeatherPast(List<Forecast> forecastList) {
+        if (pastFragment != null) pastFragment.showPast(forecastList);
     }
 
     public void removeCallBack() {

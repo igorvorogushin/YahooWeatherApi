@@ -16,21 +16,11 @@ import com.vorogushinigor.weatherapiyahoo.model.detail_weather.Forecast;
 
 import java.util.List;
 
-/**
- * Created by viv on 09.02.2017.
- */
+public class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-public class WeekAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final static int TAG_ITEM = 1;
-    private final static int TAG_PROGRESS = 0;
     private List<Forecast> listForecasts;
 
-
-    @Override
-    public int getItemViewType(int position) {
-        return listForecasts.get(position) != null ? TAG_ITEM : TAG_PROGRESS;
-    }
 
     class ViewHolderWeek extends RecyclerView.ViewHolder {
 
@@ -43,7 +33,7 @@ public class WeekAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
 
-    public WeekAdapter(List<Forecast> listForecasts) {
+    public WeatherAdapter(List<Forecast> listForecasts) {
         this.listForecasts = listForecasts;
     }
 
@@ -59,8 +49,6 @@ public class WeekAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         Forecast forecast = listForecasts.get(position);
         ((ViewHolderWeek) holder).binding.setModel(forecast);
-
-
     }
 
     @Override

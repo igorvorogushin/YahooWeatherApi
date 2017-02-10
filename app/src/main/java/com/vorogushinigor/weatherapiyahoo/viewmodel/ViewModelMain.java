@@ -7,12 +7,19 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.vorogushinigor.weatherapiyahoo.R;
 import com.vorogushinigor.weatherapiyahoo.model.YahooApi;
+import com.vorogushinigor.weatherapiyahoo.model.detail_weather.Forecast;
 import com.vorogushinigor.weatherapiyahoo.model.detail_weather.Weather;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -35,17 +42,21 @@ public class ViewModelMain extends BaseObservable implements ViewModel {
     private static final String QUERY = String.format("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"%s\") and u='" + UNIT + "'", CITY);
 
     private YahooApi yahooApi;
-    private Weather weather;
     private Observable<Weather> observable;
     private Subscription subscription;
     private Subscriber<Weather> subscriber;
 
-    private boolean loading = false;
+    private Weather weather;
+    private TreeMap<String, Forecast> hashMapPast;
+    private List<Forecast> listPast;
 
+    private boolean loading = false;
 
     public interface CallBack {
 
         void updateWeather(Weather weather);
+
+        void updateWeatherPast(List<Forecast> forecastList);
 
         void message(String message);
     }
@@ -66,7 +77,7 @@ public class ViewModelMain extends BaseObservable implements ViewModel {
 
     }
 
-    public void setContext(Context context) {
+    private void setContext(Context context) {
         this.context = context;
     }
 
@@ -132,13 +143,44 @@ public class ViewModelMain extends BaseObservable implements ViewModel {
                 Log.v(TAG_LOG, "onNext");
                 weather = _weather;
                 weather.setTimeUpdate(getCurrentTime());
+
+                if (hashMapPast == null)
+                    hashMapPast = new TreeMap<>();
+
+                //****ONLY FOR TEST*****
+                // addTestDataToHashMap();
+
+                List<Forecast> list = weather.getQuery().getResults().getChannel().getItem().getForecast();
+                for (int i = 0; i < list.size(); i++)
+                    hashMapPast.put(String.valueOf(list.get(i).getDate()), list.get(i));
+                initPast();
+
                 if (callBack != null)
                     callBack.updateWeather(weather);
-                saveWeather(weather);
 
+                if (callBack != null)
+                    callBack.updateWeatherPast(listPast);
+
+                saveWeather();
             }
         };
+    }
 
+    private void initPast() {
+        listPast = new ArrayList<>();
+        for (Map.Entry<String, Forecast> entry : hashMapPast.entrySet()) {
+            Forecast value = entry.getValue();
+
+            boolean key = true;
+            for (int j = 0; j < weather.getQuery().getResults().getChannel().getItem().getForecast().size(); j++) {
+                if (weather.getQuery().getResults().getChannel().getItem().getForecast().get(j).equals(value)) {
+                    key = false;
+                    break;
+                }
+            }
+            if (key)
+                listPast.add(value);
+        }
     }
 
     private void createObservable() {
@@ -156,26 +198,35 @@ public class ViewModelMain extends BaseObservable implements ViewModel {
     public void loadData() {
         if (callBack != null) {
             if (weather == null)
-                weather = loadWeather();
+                loadWeather();
+            if (hashMapPast != null)
+                initPast();
             if (weather != null) callBack.updateWeather(weather);
+            if (listPast != null) callBack.updateWeatherPast(listPast);
         }
 
     }
 
-    private void saveWeather(Weather weather) {
+    private void saveWeather() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor ed = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(weather);
+        String json2 = gson.toJson(hashMapPast);
         ed.putString(Weather.class.getName(), json);
+        ed.putString("hashmap", json2);
         ed.commit();
     }
 
-    private Weather loadWeather() {
+    private void loadWeather() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         Gson gson = new Gson();
         String json = sharedPreferences.getString(Weather.class.getName(), "");
-        return gson.fromJson(json, Weather.class);
+        String json2 = sharedPreferences.getString("hashmap", "");
+        weather = gson.fromJson(json, Weather.class);
+        Type type = new TypeToken<TreeMap<String, Forecast>>() {
+        }.getType();
+        hashMapPast = gson.fromJson(json2, type);
     }
 
     @Override
@@ -183,4 +234,30 @@ public class ViewModelMain extends BaseObservable implements ViewModel {
         callBack = null;
         context = null;
     }
+
+    //***************FOR TEST PAST WEATHER*************
+    private void addTestDataToHashMap() {
+
+        //fail data
+
+        Forecast forecast = new Forecast();
+        forecast.setCode("30");
+        forecast.setDate("10 Feb 2017");
+        forecast.setDay("text");
+        forecast.setHigh("+30");
+
+        Forecast forecast2 = new Forecast();
+        forecast2.setCode("30");
+        forecast2.setDate("02 Feb 2017");
+        forecast2.setDay("text");
+        forecast2.setHigh("+30");
+
+
+        hashMapPast.put("09 Feb 2017", forecast);
+        hashMapPast.put("02 Feb 2017", forecast2);
+        hashMapPast.put("08 Feb 2017", forecast);
+        hashMapPast.put("08 Feb 2017", forecast);
+
+    }
+
 }
