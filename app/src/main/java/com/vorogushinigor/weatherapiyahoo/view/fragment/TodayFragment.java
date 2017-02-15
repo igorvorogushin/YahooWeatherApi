@@ -41,6 +41,12 @@ public class TodayFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        binding = null;
+        super.onDestroyView();
+    }
+
+    @Override
     public void onPause() {
         visible = false;
         super.onPause();

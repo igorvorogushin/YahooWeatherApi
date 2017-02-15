@@ -17,6 +17,7 @@
 #}
 
 -dontwarn okio.**
+-dontwarn com.google.common.**
 -dontwarn retrofit2.Platform$Java8
 -dontwarn rx.internal.util.unsafe.**
 
